@@ -38,6 +38,23 @@ class userRepository {
     return user;
   }
 
+  async findByUsernameAndPassword(
+    nome: string,
+    senha: string,
+  ): Promise<User | null> {
+    const query = `
+      SELECT nome, uuid
+      FROM usuarios
+      WHERE nome = $1
+      AND senha = crypt($2, 'quero_trabalho_poh')
+      `;
+    const values = [nome, senha];
+
+    const { rows } = await db.query<User>(query, values);
+    const [user] = rows;
+    return user || null;
+  }
+
   async updateUser(user: User): Promise<{ uuid: string } | []> {
     const query = `
       UPDATE usuarios 
