@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS produtos(
   tipoanimal VARCHAR NOT NULL,  
   marca VARCHAR NOT NULL,
   preco FLOAT NOT NULL,  
-  PRIMARY KEY (uuid)
+  PRIMARY KEY (uuid),
 )
 
 CREATE TABLE IF NOT EXISTS compras(
@@ -26,12 +26,15 @@ CREATE TABLE IF NOT EXISTS compras(
   status VARCHAR NOT NULL,
   data DATE DEFAULT now(),
   valor FLOAT NOT NULL,
-  PRIMARY KEY (uuid)
+  PRIMARY KEY (uuid),
+  FOREIGN KEY(fkusuariocomprador) REFERENCES usuarios(uuid)
 )
 
 CREATE TABLE IF NOT EXISTS produtoscompra(
-  fkcompra VARCHAR FOREIGN KEY compras(uuid) NOT NULL,
-  fkproduto VARCHAR FOREIGN KEY produtos(uuid) NOT NULL,
+  fkcompra VARCHAR NOT NULL,
+  fkproduto VARCHAR NOT NULL,
+  FOREIGN KEY(fkcompra) REFERENCES compras(uuid),
+  FOREIGN KEY(fkproduto) REFERENCES produtos(uuid)
 )
 
 INSERT INTO usuarios (nome, cpf, email, senha) VALUES ('admin', '-', '-', 'ADMIN', crypt('69832062288','quero_trabalho_poh'))

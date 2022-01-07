@@ -57,7 +57,8 @@ class userRepository {
 
   async deleteUser(uuid: string): Promise<{ uuid: string }> {
     const query = `
-      DELETE FROM usuarios
+      UPDATE usuarios
+      SET flagativo = '0'
       WHERE uuid = $1
       RETURNING uuid
     `;
