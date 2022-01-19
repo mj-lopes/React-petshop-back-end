@@ -5,6 +5,8 @@ type Product = {
   tipoanimal: string;
   marca: string;
   preco: number;
+  imgurl: string;
+  descricao: string;
 };
 
 export default Product;

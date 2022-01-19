@@ -8,7 +8,7 @@ class productsRepository {
       FROM produtos
     `;
 
-    const { rows } = await db.query(query);
+    const { rows } = await db.query<Product>(query);
 
     return rows || [];
   }
@@ -33,17 +33,17 @@ class productsRepository {
       FROM produtos
       WHERE tipoanimal = $1
     `;
-    
+
     const values = [animalType];
     const { rows } = await db.query<Product>(query, values);
 
-    return rows;
+    return rows || [];
   }
 
   async saveNewProduct(newProduct: Product): Promise<{ uuid: string }> {
     const query = `
-      INSERT INTO produtos(nome, categoria, tipoanimal, marca, preco) 
-      VALUES($1, $2, $3, $4, $5)
+      INSERT INTO produtos(nome, categoria, tipoanimal, marca, preco, imgurl, descricao) 
+      VALUES($1, $2, $3, $4, $5, $6, $7)
       RETURNING uuid
     `;
 
@@ -53,6 +53,8 @@ class productsRepository {
       newProduct.tipoanimal,
       newProduct.marca,
       newProduct.preco,
+      newProduct.imgurl,
+      newProduct.descricao,
     ];
     const { rows } = await db.query<{ uuid: string }>(query, values);
     const [uuid] = rows;
@@ -67,7 +69,9 @@ class productsRepository {
           categoria = $2,
           tipoanimal = $3,
           marca = $4,
-          preco = $5
+          preco = $5,
+          imgurl = $6,
+          descricao = $7
       WHERE uuid = $6
       RETURNING uuid
     `;
@@ -94,7 +98,7 @@ class productsRepository {
       RETURNING uuid
     `;
     const values = [uuid];
-    const { rows } = await db.query(query, values);
+    const { rows } = await db.query<{ uuid: string }>(query, values);
     const [id] = rows;
 
     return id || [];
