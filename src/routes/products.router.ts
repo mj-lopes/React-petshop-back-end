@@ -13,11 +13,25 @@ productsRouter.get(
 );
 
 productsRouter.get(
-  "/products/:uuid",
+  "/product/:uuid",
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
     const uuid = req.params.uuid;
     const product = await productRepository.getProductByID(uuid);
     res.status(StatusCodes.OK).send(product);
+  },
+);
+
+productsRouter.get(
+  "/products/:category",
+  async (
+    req: Request<{ category: string }>,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const animalType = req.params.category;
+    const productsFromCategory =
+      await productRepository.getAllProductsFromAnimalType(animalType);
+    res.status(StatusCodes.OK).send(productsFromCategory);
   },
 );
 

@@ -7,7 +7,7 @@ function errorHandler(
   res: Response,
   next: NextFunction,
 ) {
-  res.status(StatusCodes.NOT_IMPLEMENTED).send("Um erro ocorreu");
+  res.status(StatusCodes.FORBIDDEN).send(error.message);
 }
 
 export default errorHandler;

@@ -46,7 +46,7 @@ class userRepository {
       SELECT nome, uuid
       FROM usuarios
       WHERE nome = $1
-      AND senha = crypt($2, 'quero_trabalho_poh')
+      AND senha = crypt($2, 'quero_trabalho_poh')     
       `;
     const values = [nome, senha];
 

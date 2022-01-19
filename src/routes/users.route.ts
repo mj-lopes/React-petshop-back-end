@@ -16,6 +16,7 @@ usersRoute.post(
   "/users",
   async (req: Request, res: Response, next: NextFunction) => {
     const newUser = req.body;
+    console.log(newUser);
     const uuid = await userRepository.createUser(newUser);
     res.status(StatusCodes.CREATED).send(uuid);
   },
