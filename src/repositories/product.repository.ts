@@ -31,7 +31,7 @@ class productsRepository {
     const query = `
       SELECT * 
       FROM produtos
-      WHERE tipoanimal = $1
+      WHERE tipoanimal ILIKE $1
     `;
 
     const values = [animalType];
@@ -102,6 +102,22 @@ class productsRepository {
     const [id] = rows;
 
     return id || [];
+  }
+
+  async getProductsFromQuerySearch(
+    querySearchValue: string[],
+  ): Promise<Product[]> {
+    const query = `
+      SELECT * 
+      FROM produtos
+      WHERE nome ILIKE $1
+    `;
+    const queryValue = "%" + querySearchValue.join("%%") + "%";
+    const values = [queryValue];
+
+    const { rows } = await db.query<Product>(query, values);
+
+    return rows || [];
   }
 }
 

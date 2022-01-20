@@ -44,6 +44,20 @@ productsRouter.post(
   },
 );
 
+productsRouter.get(
+  "/search/:query",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.params.query
+      .trim()
+      .split(" ")
+      .filter((x) => x);
+    const searchResult = await productRepository.getProductsFromQuerySearch(
+      query,
+    );
+    res.status(StatusCodes.OK).send(searchResult);
+  },
+);
+
 productsRouter.put(
   "/products/:uuid",
   async (req: Request, res: Response, next: NextFunction) => {
