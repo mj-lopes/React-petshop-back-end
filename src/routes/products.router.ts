@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction, Router } from "express";
 import { StatusCodes } from "http-status-codes";
+import Product from "../models/product.model";
 import productRepository from "../repositories/product.repository";
 
 const productsRouter = Router();
@@ -28,9 +29,17 @@ productsRouter.get(
     res: Response,
     next: NextFunction,
   ) => {
-    const animalType = req.params.category;
-    const productsFromCategory =
-      await productRepository.getAllProductsFromAnimalType(animalType);
+    const category = req.params.category;
+    let productsFromCategory: Product[] = [];
+
+    if (category === "remedios" || category === "acessorios_brinquedos") {
+      productsFromCategory = await productRepository.getAllProductsFromCategory(
+        category,
+      );
+    } else {
+      productsFromCategory =
+        await productRepository.getAllProductsFromAnimalType(category);
+    }
     res.status(StatusCodes.OK).send(productsFromCategory);
   },
 );

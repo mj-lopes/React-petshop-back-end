@@ -40,6 +40,19 @@ class productsRepository {
     return rows || [];
   }
 
+  async getAllProductsFromCategory(category: string): Promise<Product[]> {
+    const query = `
+      SELECT * 
+      FROM produtos
+      WHERE categoria ILIKE $1
+    `;
+
+    const values = [category];
+    const { rows } = await db.query<Product>(query, values);
+
+    return rows || [];
+  }
+
   async saveNewProduct(newProduct: Product): Promise<{ uuid: string }> {
     const query = `
       INSERT INTO produtos(nome, categoria, tipoanimal, marca, preco, imgurl, descricao) 
