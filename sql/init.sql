@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS compras(
   fkusuariocomprador uuid NOT NULL,
   status VARCHAR NOT NULL,
   data DATE DEFAULT now(),
-  valor FLOAT NOT NULL,
   PRIMARY KEY (uuid),
   FOREIGN KEY(fkusuariocomprador) REFERENCES usuarios(uuid)
 )
@@ -33,6 +32,8 @@ CREATE TABLE IF NOT EXISTS compras(
 CREATE TABLE IF NOT EXISTS produtoscompra(
   fkcompra uuid NOT NULL,
   fkproduto uuid NOT NULL,
+  quantidade INTEGER NOT NULL,
+  preco FLOAT NOT NULL,
   FOREIGN KEY(fkcompra) REFERENCES compras(uuid),
   FOREIGN KEY(fkproduto) REFERENCES produtos(uuid)
 )
