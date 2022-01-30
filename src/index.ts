@@ -6,6 +6,7 @@ import productsRouter from "./routes/products.router";
 import usersRoute from "./routes/users.route";
 import purchasesRouter from "./routes/purchases.router";
 import cors from "cors";
+import bearerAuthenticationMiddleware from "./middlewares/Bearer-authentication.middleware";
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(cors());
 app.use("/users", usersRoute);
 app.use(productsRouter);
 app.use(authorizationRoute);
-app.use(purchasesRouter);
+app.use("/purchase", bearerAuthenticationMiddleware, purchasesRouter);
 app.use(errorHandler);
 
 app.listen(9090, () => {
