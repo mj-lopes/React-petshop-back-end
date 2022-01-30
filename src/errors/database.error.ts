@@ -1,3 +1,3 @@
-import { ApplicationError } from "./Application.error";
+import { ApplicationError } from "./application.error";
 
 export class DatabaseError extends ApplicationError<any> {}
