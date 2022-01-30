@@ -37,7 +37,6 @@ function errorHandler(
   }
 
   errorResponse.body.message = error.message;
-  console.log(error.constructor.name);
 
   return res.status(errorResponse.status).send(errorResponse.body);
 }

@@ -5,20 +5,43 @@ import productRepository from "../repositories/product.repository";
 
 const productsRouter = Router();
 
-productsRouter.get(
+productsRouter.post(
   "/products",
   async (req: Request, res: Response, next: NextFunction) => {
-    const products = await productRepository.getAllProducts();
-    res.status(StatusCodes.OK).send(products);
+    try {
+      const newProduct = req.body;
+      const uuid = await productRepository.saveNewProduct(newProduct);
+      res.status(StatusCodes.CREATED).send(uuid);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
 productsRouter.get(
-  "/product/:uuid",
+  "/products",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const products = await productRepository.getAllProducts();
+
+      res.status(StatusCodes.OK).send(products);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+productsRouter.get(
+  "/products/:uuid",
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
-    const uuid = req.params.uuid;
-    const product = await productRepository.getProductByID(uuid);
-    res.status(StatusCodes.OK).send(product);
+    try {
+      const uuid = req.params.uuid;
+      const product = await productRepository.getProductByID(uuid);
+
+      res.status(StatusCodes.OK).send(product);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
@@ -44,47 +67,49 @@ productsRouter.get(
   },
 );
 
-productsRouter.post(
-  "/products",
-  async (req: Request, res: Response, next: NextFunction) => {
-    const newProduct = req.body;
-    const uuid = await productRepository.saveNewProduct(newProduct);
-    res.status(StatusCodes.CREATED).send(uuid);
-  },
-);
-
 productsRouter.get(
-  "/search/:query",
+  "/products/search/:query",
   async (req: Request, res: Response, next: NextFunction) => {
-    const query = req.params.query
-      .trim()
-      .split(" ")
-      .filter((x) => x);
-    const searchResult = await productRepository.getProductsFromQuerySearch(
-      query,
-    );
-    res.status(StatusCodes.OK).send(searchResult);
+    try {
+      const query = req.params.query
+        .trim()
+        .split(" ")
+        .filter((x) => x);
+      const searchResult = await productRepository.getProductsFromQuerySearch(
+        query,
+      );
+      res.status(StatusCodes.OK).send(searchResult);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
 productsRouter.put(
   "/products/:uuid",
   async (req: Request, res: Response, next: NextFunction) => {
-    const product = req.body;
-    const uuid = req.params.uuid;
-    product.uuid = uuid;
-    const productUpdated = productRepository.updateProduct(product);
-    res.status(StatusCodes.OK).send(productUpdated);
+    try {
+      const product = req.body;
+      const uuid = req.params.uuid;
+      product.uuid = uuid;
+      const productUpdated = productRepository.updateProduct(product);
+      res.status(StatusCodes.OK).send(productUpdated);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
 productsRouter.delete(
   "/products/:uuid",
   async (req: Request, res: Response, next: NextFunction) => {
-    const uuid = req.params.uuid;
-    console.log(uuid);
-    const productDeleted = productRepository.deleteProduct(uuid);
-    res.status(StatusCodes.OK).send(productDeleted);
+    try {
+      const uuid = req.params.uuid;
+      const productDeleted = productRepository.deleteProduct(uuid);
+      res.status(StatusCodes.OK).send(productDeleted);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 

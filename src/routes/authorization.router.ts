@@ -29,8 +29,12 @@ authorizationRoute.post(
   "/token/validate",
   bearerAuthenticationMiddleware,
   (req: Request, res: Response, next: NextFunction) => {
-    const user = req.user;
-    res.status(StatusCodes.OK).send(user);
+    try {
+      const user = req.user;
+      res.status(StatusCodes.OK).send(user);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 

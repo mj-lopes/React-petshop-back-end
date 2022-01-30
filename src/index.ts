@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use(usersRoute);
+app.use("/users", usersRoute);
 app.use(productsRouter);
 app.use(authorizationRoute);
 app.use(purchasesRouter);

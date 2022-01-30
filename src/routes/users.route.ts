@@ -1,56 +1,82 @@
 import { Response, Request, NextFunction, Router } from "express";
 import { StatusCodes } from "http-status-codes";
+import bearerAuthenticationMiddleware from "../middlewares/Bearer-authentication.middleware";
 import userRepository from "../repositories/user.repository";
 
 const usersRoute = Router();
 
-usersRoute.get(
-  "/users",
-  async (req: Request, res: Response, next: NextFunction) => {
-    const users = await userRepository.getAllUsers();
-    res.status(StatusCodes.OK).send(users);
-  },
-);
-
 usersRoute.post(
-  "/users",
+  "/",
   async (req: Request, res: Response, next: NextFunction) => {
-    const newUser = req.body;
-    console.log(newUser);
-    const uuid = await userRepository.createUser(newUser);
-    res.status(StatusCodes.CREATED).send(uuid);
+    try {
+      const newUser = req.body;
+      const uuid = await userRepository.createUser(newUser);
+
+      res.status(StatusCodes.CREATED).send(uuid);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
 usersRoute.get(
-  "/users/:uuid",
+  "/",
+  bearerAuthenticationMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
-    const uuid = req.params.uuid;
-    const user = await userRepository.findUserByUUID(uuid);
+    try {
+      const users = await userRepository.getAllUsers();
 
-    res.status(StatusCodes.OK).send(user);
+      res.status(StatusCodes.OK).send(users);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+usersRoute.get(
+  "/:uuid",
+  bearerAuthenticationMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const uuid = req.params.uuid;
+      const user = await userRepository.findUserByUUID(uuid);
+
+      res.status(StatusCodes.OK).send(user);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
 usersRoute.put(
-  "/users/:uuid",
+  "/:uuid",
+  bearerAuthenticationMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
-    const uuid = req.params.uuid;
-    const modifiedUser = req.body;
-    modifiedUser.uuid = uuid;
-    const userUpdated = await userRepository.updateUser(modifiedUser);
+    try {
+      const uuid = req.params.uuid;
+      const modifiedUser = req.body;
+      modifiedUser.uuid = uuid;
+      const userUpdated = await userRepository.updateUser(modifiedUser);
 
-    res.status(StatusCodes.OK).send(userUpdated);
+      res.status(StatusCodes.OK).send(userUpdated);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
 usersRoute.delete(
-  "/users/:uuid",
+  "/:uuid",
+  bearerAuthenticationMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
-    const uuid = req.params.uuid;
-    const userDeleted = await userRepository.deleteUser(uuid);
+    try {
+      const uuid = req.params.uuid;
+      const userDeleted = await userRepository.deleteUser(uuid);
 
-    res.status(StatusCodes.OK).send(userDeleted);
+      res.status(StatusCodes.OK).send(userDeleted);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 

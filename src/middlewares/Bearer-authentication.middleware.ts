@@ -33,7 +33,7 @@ async function bearerAuthenticationMiddleware(
       throw new ForbiddenError({ log: "Token inválido" });
     }
   } catch (error) {
-    next(error);
+    return next(error);
   }
 }
 

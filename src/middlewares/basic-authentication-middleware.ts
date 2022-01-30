@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { DatabaseError } from "../errors/database.error";
+import { ForbiddenError } from "../errors/forbidden.error";
 import userRepository from "../repositories/user.repository";
 
 async function basicAuthenticationMiddleware(
@@ -11,13 +12,13 @@ async function basicAuthenticationMiddleware(
     const authorizationHeader = req.headers["authorization"];
 
     if (!authorizationHeader) {
-      throw new DatabaseError({ log: "Credenciais não informadas" });
+      throw new ForbiddenError({ log: "Credenciais não informadas" });
     }
 
     const [authorizationType, token] = authorizationHeader.split(" ");
 
     if (authorizationType !== "Basic" || !token) {
-      throw new DatabaseError({ log: "Autenticação inválida" });
+      throw new ForbiddenError({ log: "Autenticação inválida" });
     }
 
     const tokenContent = Buffer.from(token, "base64").toString("utf-8");
@@ -25,7 +26,7 @@ async function basicAuthenticationMiddleware(
     const [username, password] = tokenContent.split(":");
 
     if (!username || !password) {
-      throw new DatabaseError({ log: "Credencias não preenchidas" });
+      throw new ForbiddenError({ log: "Credencias não preenchidas" });
     }
 
     try {
@@ -33,8 +34,9 @@ async function basicAuthenticationMiddleware(
         username,
         password,
       );
+      console.log(user);
 
-      if (!user) throw new Error();
+      if (user === null) throw new Error();
 
       req.user = user;
       return next();
