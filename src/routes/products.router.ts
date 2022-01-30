@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction, Router } from "express";
 import { StatusCodes } from "http-status-codes";
+import bearerAuthenticationMiddleware from "../middlewares/Bearer-authentication.middleware";
 import Product from "../models/product.model";
 import productRepository from "../repositories/product.repository";
 
@@ -7,6 +8,7 @@ const productsRouter = Router();
 
 productsRouter.post(
   "/",
+  bearerAuthenticationMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const newProduct = req.body;
@@ -35,7 +37,7 @@ productsRouter.get(
 );
 
 productsRouter.get(
-  "/:uuid",
+  "/product/:uuid",
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
     try {
       const uuid = req.params.uuid;
@@ -103,6 +105,7 @@ productsRouter.get(
 
 productsRouter.put(
   "/:uuid",
+  bearerAuthenticationMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const product = req.body;
@@ -119,6 +122,7 @@ productsRouter.put(
 
 productsRouter.delete(
   "/:uuid",
+  bearerAuthenticationMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const uuid = req.params.uuid;

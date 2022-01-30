@@ -8,6 +8,8 @@ async function bearerAuthenticationMiddleware(
   res: Response,
   next: NextFunction,
 ) {
+  const SECRET = `${process.env.DB_CRYPTSECRET}`;
+
   try {
     const authorizationHeader = req.headers["authorization"];
     if (!authorizationHeader) {
@@ -20,14 +22,15 @@ async function bearerAuthenticationMiddleware(
     }
 
     try {
-      const tokenPayload = JWT.verify(token, "quero_trabalho_poh");
+      const tokenPayload = JWT.verify(token, SECRET);
 
       if (typeof tokenPayload !== "object" || !tokenPayload.sub) {
-        throw new ForbiddenError({ log: "Token inválido" });
+        throw new Error();
       }
 
       const user = await userRepository.findUserByUUID(tokenPayload.sub);
       req.user = user;
+
       return next();
     } catch (e) {
       throw new ForbiddenError({ log: "Token inválido" });

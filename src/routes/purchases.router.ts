@@ -64,6 +64,9 @@ purchasesRouter.get(
         purchaseID,
       );
 
+      if (!purchaseInfo || products.length === 0)
+        res.sendStatus(StatusCodes.NO_CONTENT);
+
       const response = JSON.stringify([purchaseInfo, ...products]);
 
       res.status(StatusCodes.OK).send(response);

@@ -14,7 +14,7 @@ authorizationRoute.post(
       const user = req.user;
 
       const jwtPayload = { nome: user?.nome };
-      const secretKey = "quero_trabalho_poh";
+      const secretKey = `${process.env.DB_CRYPTSECRET}`;
       const jwtOptions = { subject: user?.uuid };
 
       const jwt = JWT.sign(jwtPayload, secretKey, jwtOptions);

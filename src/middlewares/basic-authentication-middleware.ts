@@ -34,11 +34,11 @@ async function basicAuthenticationMiddleware(
         username,
         password,
       );
-      console.log(user);
 
       if (user === null) throw new Error();
 
       req.user = user;
+
       return next();
     } catch (e) {
       throw new DatabaseError({ log: "Usuário ou senha inválidos" });
