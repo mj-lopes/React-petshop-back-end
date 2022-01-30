@@ -7,7 +7,7 @@ import bearerAuthenticationMiddleware from "../middlewares/Bearer-authentication
 const authorizationRoute = Router();
 
 authorizationRoute.post(
-  "/token",
+  "/",
   basicAuthenticationMiddleware,
   (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -26,7 +26,7 @@ authorizationRoute.post(
 );
 
 authorizationRoute.post(
-  "/token/validate",
+  "/validate",
   bearerAuthenticationMiddleware,
   (req: Request, res: Response, next: NextFunction) => {
     try {
