@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { DatabaseError } from "../errors/database.error";
 import userRepository from "../repositories/user.repository";
 
 async function basicAuthenticationMiddleware(
@@ -10,13 +11,13 @@ async function basicAuthenticationMiddleware(
     const authorizationHeader = req.headers["authorization"];
 
     if (!authorizationHeader) {
-      throw new Error("Credenciais não informadas");
+      throw new DatabaseError({ log: "Credenciais não informadas" });
     }
 
     const [authorizationType, token] = authorizationHeader.split(" ");
 
     if (authorizationType !== "Basic" || !token) {
-      throw new Error("Tipo de autentificação inválido");
+      throw new DatabaseError({ log: "Autenticação inválida" });
     }
 
     const tokenContent = Buffer.from(token, "base64").toString("utf-8");
@@ -24,22 +25,24 @@ async function basicAuthenticationMiddleware(
     const [username, password] = tokenContent.split(":");
 
     if (!username || !password) {
-      throw new Error("Credencias não preenchidas");
+      throw new DatabaseError({ log: "Credencias não preenchidas" });
     }
 
-    const user = await userRepository.findByUsernameAndPassword(
-      username,
-      password,
-    );
+    try {
+      const user = await userRepository.findByUsernameAndPassword(
+        username,
+        password,
+      );
 
-    if (!user) {
-      throw new Error("Usuário ou senha inválidos");
+      if (!user) throw new Error();
+
+      req.user = user;
+      return next();
+    } catch (e) {
+      throw new DatabaseError({ log: "Usuário ou senha inválidos" });
     }
-
-    req.user = user;
-    next();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 }
 
