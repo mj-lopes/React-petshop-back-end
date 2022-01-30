@@ -1,7 +1,7 @@
 import { Pool } from "pg";
+import "dotenv/config";
 
-const connectionString =
-  "postgres://mvqniuid:fPBvEcbs2VKD5IFDPWsFhGZTpbu7SzeH@motty.db.elephantsql.com/mvqniuid";
+const connectionString = process.env.DB_CONNECTIONSTRING;
 
 const db = new Pool({ connectionString });
 

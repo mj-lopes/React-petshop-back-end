@@ -5,9 +5,11 @@ import User from "../models/user.model";
 class userRepository {
   async createUser(user: User): Promise<{ uuid: string }> {
     try {
+      const secret = process.env.DB_CRYPTSECRET;
+
       const query = `
       INSERT INTO usuarios (nome, cpf, email, senha)
-      VALUES ($1, $2, $3, crypt($4, 'quero_trabalho_poh'))
+      VALUES ($1, $2, $3, crypt($4, '${secret}'))
       RETURNING uuid
     `;
 
@@ -63,11 +65,13 @@ class userRepository {
     senha: string,
   ): Promise<User | null> {
     try {
+      const secret = process.env.DB_CRYPTSECRET;
+
       const query = `
       SELECT nome, uuid
       FROM usuarios
       WHERE nome = $1
-      AND senha = crypt($2, 'quero_trabalho_poh')     
+      AND senha = crypt($2, '${secret}')     
       `;
       const values = [nome, senha];
 
@@ -84,12 +88,14 @@ class userRepository {
 
   async updateUser(user: User): Promise<{ uuid: string } | []> {
     try {
+      const secret = process.env.DB_CRYPTSECRET;
+
       const query = `
       UPDATE usuarios 
       SET nome = $1,
           cpf = $2,
           email = $3,
-          senha = crypt($4, 'quero_trabalho_poh')
+          senha = crypt($4, '${secret}')
       WHERE uuid = $5
       RETURNING uuid
     `;

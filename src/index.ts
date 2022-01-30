@@ -1,12 +1,15 @@
 import express, { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
+import cors from "cors";
+import "dotenv/config";
+
 import errorHandler from "./middlewares/error-handler-middleware";
+import bearerAuthenticationMiddleware from "./middlewares/Bearer-authentication.middleware";
+
 import authorizationRoute from "./routes/authorization.router";
 import productsRouter from "./routes/products.router";
 import usersRoute from "./routes/users.route";
 import purchasesRouter from "./routes/purchases.router";
-import cors from "cors";
-import bearerAuthenticationMiddleware from "./middlewares/Bearer-authentication.middleware";
 
 const app = express();
 
@@ -20,8 +23,10 @@ app.use("/products", productsRouter);
 app.use("/purchase", bearerAuthenticationMiddleware, purchasesRouter);
 app.use(errorHandler);
 
-app.listen(9090, () => {
-  console.log("Server online na porta 3000");
+const door = 9090;
+
+app.listen(door, () => {
+  console.log(`Server online na porta ${door}`);
 });
 
 app.get("/status", (req: Request, res: Response, next: NextFunction) => {
