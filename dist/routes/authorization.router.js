@@ -13,7 +13,7 @@ authorizationRoute.post("/", basic_authentication_middleware_1.default, (req, re
     try {
         const user = req.user;
         const jwtPayload = { nome: user === null || user === void 0 ? void 0 : user.nome };
-        const secretKey = "quero_trabalho_poh";
+        const secretKey = `${process.env.DB_CRYPTSECRET}`;
         const jwtOptions = { subject: user === null || user === void 0 ? void 0 : user.uuid };
         const jwt = jsonwebtoken_1.default.sign(jwtPayload, secretKey, jwtOptions);
         res.status(http_status_codes_1.StatusCodes.OK).json({ token: jwt });

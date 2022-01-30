@@ -23,7 +23,6 @@ async function basicAuthenticationMiddleware(req, res, next) {
         }
         try {
             const user = await user_repository_1.default.findByUsernameAndPassword(username, password);
-            console.log(user);
             if (user === null)
                 throw new Error();
             req.user = user;

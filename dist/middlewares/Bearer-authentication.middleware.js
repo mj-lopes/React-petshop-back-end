@@ -7,6 +7,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const forbidden_error_1 = require("../errors/forbidden.error");
 const user_repository_1 = __importDefault(require("../repositories/user.repository"));
 async function bearerAuthenticationMiddleware(req, res, next) {
+    const SECRET = `${process.env.DB_CRYPTSECRET}`;
     try {
         const authorizationHeader = req.headers["authorization"];
         if (!authorizationHeader) {
@@ -17,9 +18,9 @@ async function bearerAuthenticationMiddleware(req, res, next) {
             throw new forbidden_error_1.ForbiddenError({ log: "Autenticação inválida" });
         }
         try {
-            const tokenPayload = jsonwebtoken_1.default.verify(token, "quero_trabalho_poh");
+            const tokenPayload = jsonwebtoken_1.default.verify(token, SECRET);
             if (typeof tokenPayload !== "object" || !tokenPayload.sub) {
-                throw new forbidden_error_1.ForbiddenError({ log: "Token inválido" });
+                throw new Error();
             }
             const user = await user_repository_1.default.findUserByUUID(tokenPayload.sub);
             req.user = user;

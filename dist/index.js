@@ -22,7 +22,7 @@ app.use("/users", users_route_1.default);
 app.use("/products", products_router_1.default);
 app.use("/purchase", Bearer_authentication_middleware_1.default, purchases_router_1.default);
 app.use(error_handler_middleware_1.default);
-const door = 9090;
+const door = 3030;
 app.listen(door, () => {
     console.log(`Server online na porta ${door}`);
 });

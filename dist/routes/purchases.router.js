@@ -37,6 +37,8 @@ purchasesRouter.get("/:uuid", Bearer_authentication_middleware_1.default, async 
         const purchaseID = req.params.uuid;
         const purchaseInfo = await purchase_repository_1.default.get_purchase_detail(purchaseID);
         const products = await purchase_repository_1.default.get_products_from_purchase(purchaseID);
+        if (!purchaseInfo || products.length === 0)
+            res.sendStatus(http_status_codes_1.StatusCodes.NO_CONTENT);
         const response = JSON.stringify([purchaseInfo, ...products]);
         res.status(http_status_codes_1.StatusCodes.OK).send(response);
     }

@@ -5,9 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const http_status_codes_1 = require("http-status-codes");
+const Bearer_authentication_middleware_1 = __importDefault(require("../middlewares/Bearer-authentication.middleware"));
 const product_repository_1 = __importDefault(require("../repositories/product.repository"));
 const productsRouter = (0, express_1.Router)();
-productsRouter.post("/", async (req, res, next) => {
+productsRouter.post("/", Bearer_authentication_middleware_1.default, async (req, res, next) => {
     try {
         const newProduct = req.body;
         const uuid = await product_repository_1.default.saveNewProduct(newProduct);
@@ -28,7 +29,7 @@ productsRouter.get("/", async (req, res, next) => {
         next(error);
     }
 });
-productsRouter.get("/:uuid", async (req, res, next) => {
+productsRouter.get("/product/:uuid", async (req, res, next) => {
     try {
         const uuid = req.params.uuid;
         const product = await product_repository_1.default.getProductByID(uuid);
@@ -75,7 +76,7 @@ productsRouter.get("/search/:query", async (req, res, next) => {
         next(error);
     }
 });
-productsRouter.put("/:uuid", async (req, res, next) => {
+productsRouter.put("/:uuid", Bearer_authentication_middleware_1.default, async (req, res, next) => {
     try {
         const product = req.body;
         const uuid = req.params.uuid;
@@ -87,7 +88,7 @@ productsRouter.put("/:uuid", async (req, res, next) => {
         next(error);
     }
 });
-productsRouter.delete("/:uuid", async (req, res, next) => {
+productsRouter.delete("/:uuid", Bearer_authentication_middleware_1.default, async (req, res, next) => {
     try {
         const uuid = req.params.uuid;
         const productDeleted = product_repository_1.default.deleteProduct(uuid);
