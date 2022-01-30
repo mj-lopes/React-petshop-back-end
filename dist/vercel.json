@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "name": "react-petshop-backend",
+  "builds": [{ "dist": "index.js", "use": "@vercel/node" }],
+  "routes": [{ "dist": "/(.*)", "dest": "/index.js" }]
+}
