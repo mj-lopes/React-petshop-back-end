@@ -23,7 +23,7 @@ app.use("/products", productsRouter);
 app.use("/purchase", bearerAuthenticationMiddleware, purchasesRouter);
 app.use(errorHandler);
 
-const door = 3030;
+const door = process.env.PORT || 3030;
 
 app.listen(door, () => {
   console.log(`Server online na porta ${door}`);
